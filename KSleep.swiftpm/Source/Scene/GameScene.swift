@@ -62,6 +62,37 @@ class GameScene: SKScene {
         setScene()
     }
     
+    override func update(_ currentTime: TimeInterval) {
+        let randomNumber = Double.random(in: 0...1)
+        
+        if randomNumber < 0.008 {
+            activateRandomAnimation()
+        }
+    }
+    
+    private func activateRandomAnimation() {
+        let objects = [curtain, lighting, computer]
+        
+        if let randomObject = objects.randomElement() {
+            if randomObject is Curtain {
+                if curtain.animated == false {
+                    curtain.applyWind()
+                }
+            } else if randomObject is Computer {
+                if computer.animated == false {
+                    addChild(computer)
+                    computer.turnOn()
+                }
+            } else {
+                if lighting.animated == false {
+                    addChild(lighting)
+                    lighting.turnOn()
+                }
+            }
+        }
+    }
+
+    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first else {return}
         let touchLocation = touch.location(in: self)
@@ -70,27 +101,18 @@ class GameScene: SKScene {
             if curtain.animated {
                 curtain.stopWind()
                 room.stopShadows()
-            } else {
-                curtain.applyWind()
-                room.changeShadows()
             }
         }
         
         if lightingHitArea.contains(touchLocation) {
             if lighting.animated {
                 lighting.turnOff()
-            } else {
-                addChild(lighting)
-                lighting.turnOn()
             }
         }
         
         if computerHitArea.contains(touchLocation) {
             if computer.animated {
                 computer.turnOff()
-            } else {
-                addChild(computer)
-                computer.turnOn()
             }
         }
     }
