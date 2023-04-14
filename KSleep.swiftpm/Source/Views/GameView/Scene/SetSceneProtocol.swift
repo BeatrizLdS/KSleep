@@ -10,13 +10,11 @@ import Foundation
 protocol SetSceneProtocol {
     func setPosition()
     func addChilds()
-    func setPhysics()
 }
 
 extension SetSceneProtocol {
     func setScene() {
         addChilds()
         setPosition()
-        setPhysics()
     }
 }
