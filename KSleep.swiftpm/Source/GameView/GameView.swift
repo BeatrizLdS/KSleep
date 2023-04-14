@@ -18,25 +18,42 @@ struct GameView: View {
         return view
     }
 
-    var timerText: Text {
-        var text = Text("\(hour) \(timePeriod)")
-        text = text.font(.system(size: 40, weight: .bold))
-        text = text.fontWeight(.bold)
+    var hourText: Text {
+        var text = Text("\(hour)")
+        text = text.font(.system(size: 40, weight: .medium))
         text = text.foregroundColor(.white)
         return text
+    }
+    
+    var periodText: Text {
+        var text = Text("\(timePeriod)")
+        text = text.font(.system(size: 25, weight: .regular))
+        text = text.foregroundColor(.white)
+        return text
+    }
+    
+    init(gameDelegate: GameProtocol) {
+        self.gameDelegate = gameDelegate
     }
 
     var body: some View {
         GeometryReader { geometry in
-            ZStack(alignment: .top) {
+            ZStack(alignment: .bottom) {
                 spriteView
                     .aspectRatio(contentMode: .fill)
                     .ignoresSafeArea()
                     .frame(width: geometry.size.width, height: geometry.size.height)
                 HStack{
                     Spacer()
-                    timerText
-                        .padding([.trailing, .top], 50)
+                    HStack (alignment: .bottom, spacing: 5) {
+                        hourText
+                        periodText
+                            .opacity(0.9)
+                            .multilineTextAlignment(.leading)
+                    }
+                    .padding(.trailing, geometry.size.width/8)
+                    .padding(.bottom, geometry.size.height/6)
+                    
                 }
             }
         }
