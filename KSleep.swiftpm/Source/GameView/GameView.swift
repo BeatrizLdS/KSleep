@@ -5,6 +5,7 @@ struct GameView: View {
 
     @State var hour: Int = 10
     @State var timePeriod = "PM"
+    @State var sleepRate = 100
     var gameDelegate: GameProtocol?
     
     var gameScene: SKScene {
@@ -18,28 +19,86 @@ struct GameView: View {
         return view
     }
 
-    var timerText: Text {
-        var text = Text("\(hour) \(timePeriod)")
-        text = text.font(.system(size: 40, weight: .bold))
-        text = text.fontWeight(.bold)
+    var hourText: Text {
+        var text = Text("\(hour)")
+        text = text.font(.system(size: 40, weight: .medium))
         text = text.foregroundColor(.white)
         return text
+    }
+    
+    var periodText: Text {
+        var text = Text("\(timePeriod)")
+        text = text.font(.system(size: 25, weight: .regular))
+        text = text.foregroundColor(.white)
+        return text
+    }
+    
+    init(gameDelegate: GameProtocol) {
+        self.gameDelegate = gameDelegate
     }
 
     var body: some View {
         GeometryReader { geometry in
             ZStack(alignment: .top) {
-                spriteView
-                    .aspectRatio(contentMode: .fill)
-                    .ignoresSafeArea()
-                    .frame(width: geometry.size.width, height: geometry.size.height)
-                HStack{
+                VStack(alignment: .center) {
                     Spacer()
-                    timerText
-                        .padding([.trailing, .top], 50)
+                    spriteView
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: geometry.size.width, height: 9 * (geometry.size.height/10))
+                        .ignoresSafeArea()
                 }
+                
+                HStack {
+                    progressBar()
+                        .frame(width: 6 * (geometry.size.width/10))
+                    HStack{
+                        Spacer()
+                        HStack (alignment: .bottom, spacing: 5) {
+                            hourText
+                            periodText
+                                .opacity(0.9)
+                                .multilineTextAlignment(.leading)
+                        }
+                    }
+                }
+                .ignoresSafeArea()
+                .frame(height: geometry.size.height/10)
+                .padding([.trailing, .leading], geometry.size.width/10)
             }
         }
+        .edgesIgnoringSafeArea(.all)
+    }
+    
+    func progressBar() -> some View {
+        return (
+            GeometryReader { geometry in
+                ZStack(alignment: .leading) {
+                    
+                    RoundedRectangle(cornerRadius: 60)
+                        .stroke(Color(UIColor.pinkBed!), lineWidth: 2)
+                    
+                    ZStack(alignment: .trailing) {
+                        RoundedRectangle(cornerRadius: 60)
+                            .fill(Color(UIColor.pinkBed!))
+                        Text("\(sleepRate)%")
+                            .foregroundColor(.white)
+                            .fontWeight(.semibold)
+                            .font(.system(size: 20))
+                            .frame(width: 55)
+                            .padding([.top, .bottom], 5)
+                            .padding([.leading, .trailing], 10)
+                            .background(
+                                RoundedRectangle(cornerRadius: 60)
+                                    .fill(Color(UIColor.pinkPink!))
+                            )
+                            .shadow(color: .black, radius: 2)
+                        
+                    }
+                    .frame(width: (CGFloat(sleepRate) * geometry.size.width)/100, height: 25)
+                }
+            }
+                .fixedSize(horizontal: false, vertical: true)
+        )
     }
 }
 
