@@ -10,6 +10,10 @@ import SpriteKit
 
 class GameScene: SKScene {
     
+    var lastUpdateTime: TimeInterval = 0
+    var animationRate = 0.008
+    var timerDelegate: TimerDelegate?
+    
     let room: Room = {
         let room = Room()
         room.yScale = 0.7
@@ -58,15 +62,21 @@ class GameScene: SKScene {
     } ()
     
     override func didMove(to view: SKView) {
-        backgroundColor = .black
+        backgroundColor = .clear
         setScene()
     }
     
     override func update(_ currentTime: TimeInterval) {
         let randomNumber = Double.random(in: 0...1)
-        
-        if randomNumber < 0.008 {
+        if randomNumber < animationRate {
             activateRandomAnimation()
+        }
+        
+        let timeInSeconds = calculateDeltaTime(from: currentTime)
+        if timeInSeconds >= 15 {
+            animationRate = animationRate + 0.002
+            lastUpdateTime = 0
+            timerDelegate?.addOneHour()
         }
     }
     
@@ -77,6 +87,7 @@ class GameScene: SKScene {
             if randomObject is Curtain {
                 if curtain.animated == false {
                     curtain.applyWind()
+                    room.changeShadows()
                 }
             } else if randomObject is Computer {
                 if computer.animated == false {
@@ -92,6 +103,14 @@ class GameScene: SKScene {
         }
     }
 
+    private func calculateDeltaTime(from currentTime: TimeInterval) -> TimeInterval {
+        if lastUpdateTime.isZero {
+            lastUpdateTime = currentTime
+        }
+        
+        let deltaTime = currentTime - lastUpdateTime
+        return deltaTime
+    }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first else {return}
@@ -138,12 +157,12 @@ extension GameScene: SetSceneProtocol {
             x: frame.width * 0.43,
             y: frame.height * 0.64
         )
-        
+
         lightingHitArea.position = CGPoint(
             x: frame.width * 0.63,
             y: frame.height * 0.5
         )
-        
+
         computerHitArea.position = CGPoint(
             x: frame.width * 0.3,
             y: frame.height * 0.47
@@ -157,7 +176,5 @@ extension GameScene: SetSceneProtocol {
         addChild(lightingHitArea)
         addChild(computerHitArea)
     }
-    
-    func setPhysics() { }
 }
 
