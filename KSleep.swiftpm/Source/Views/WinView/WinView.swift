@@ -9,8 +9,12 @@ import SwiftUI
 
 struct WinView: View {
     var body: some View {
-        VStack {
+        ZStack {
+            Color.black
             Text("Win!!")
+                .font(.title)
+                .foregroundColor(.white)
         }
+        .ignoresSafeArea()
     }
 }
