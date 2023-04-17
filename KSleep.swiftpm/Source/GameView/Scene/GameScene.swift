@@ -10,8 +10,10 @@ import SpriteKit
 
 class GameScene: SKScene {
     
+    private var minutesInGame = 0.15
     var lastUpdateTime: TimeInterval = 0
-    var animationRate = 0.008
+    var numberOfMinutes: Int = 0
+    var animationRate = 0.01
     var timerDelegate: TimerDelegate?
     
     let room: Room = {
@@ -73,10 +75,24 @@ class GameScene: SKScene {
         }
         
         let timeInSeconds = calculateDeltaTime(from: currentTime)
-        if timeInSeconds >= 15 {
-            animationRate = animationRate + 0.002
+        if timeInSeconds >= minutesInGame {
             lastUpdateTime = 0
-            timerDelegate?.addOneHour()
+            timerDelegate?.addOneMinute()
+            numberOfMinutes += 1
+        }
+        if numberOfMinutes == 60 {
+            animationRate = animationRate + 0.002
+            numberOfMinutes = 0
+        }
+        
+        if curtain.animated {
+            timerDelegate?.decreaseSleepRate()
+        }
+        if lighting.animated {
+            timerDelegate?.decreaseSleepRate()
+        }
+        if computer.animated {
+            timerDelegate?.decreaseSleepRate()
         }
     }
     
