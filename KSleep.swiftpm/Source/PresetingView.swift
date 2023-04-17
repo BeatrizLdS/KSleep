@@ -19,6 +19,7 @@ struct PresentingView: View {
     var body: some View {
         let gameView = GameView(gameDelegate: self)
         let winView = WinView()
+        let gameOverView = GameOverView()
         ZStack {
             Color.black
             if showGameView {
@@ -26,6 +27,10 @@ struct PresentingView: View {
             }
             if showWinView {
                 winView
+                    .transition(.opacity)
+            }
+            if showGameOverView {
+                gameOverView
                     .transition(.opacity)
             }
         }
@@ -42,7 +47,10 @@ extension PresentingView: GameProtocol {
     }
     
     func gameOver(timeDuration: String) {
-        showGameOverView = true
+        withAnimation{
+            showGameView = false
+            showGameOverView = true            
+        }
     }
 }
 

@@ -8,5 +8,6 @@
 import Foundation
 
 protocol TimerDelegate {
-    func addOneHour()
+    func addOneMinute()
+    func decreaseSleepRate()
 }

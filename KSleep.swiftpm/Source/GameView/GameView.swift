@@ -4,7 +4,10 @@ import SpriteKit
 struct GameView: View {
 
     @State var hour: Int = 10
+    @State var minutes: Float = 0
+    @State var minutesString: String = "00"
     @State var timePeriod = "PM"
+    @State var sleepRate: CGFloat = 100
     var gameDelegate: GameProtocol?
     
     var gameScene: SKScene {
@@ -19,8 +22,9 @@ struct GameView: View {
     }
 
     var hourText: Text {
-        var text = Text("\(hour)")
-        text = text.font(.system(size: 40, weight: .medium))
+        var text = Text("\(hour):\(minutesString)")
+        text = text.font(.system(size: 35
+                                 , weight: .medium))
         text = text.foregroundColor(.white)
         return text
     }
@@ -38,31 +42,89 @@ struct GameView: View {
 
     var body: some View {
         GeometryReader { geometry in
-            ZStack(alignment: .bottom) {
-                spriteView
-                    .aspectRatio(contentMode: .fill)
-                    .ignoresSafeArea()
-                    .frame(width: geometry.size.width, height: geometry.size.height)
-                HStack{
+            ZStack(alignment: .top) {
+                VStack(alignment: .center) {
                     Spacer()
-                    HStack (alignment: .bottom, spacing: 5) {
-                        hourText
-                        periodText
-                            .opacity(0.9)
-                            .multilineTextAlignment(.leading)
-                    }
-                    .padding(.trailing, geometry.size.width/8)
-                    .padding(.bottom, geometry.size.height/6)
-                    
+                    spriteView
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: geometry.size.width, height: 9 * (geometry.size.height/10))
+                        .ignoresSafeArea()
                 }
+                
+                HStack {
+                    progressBar()
+                        .frame(width: 6 * (geometry.size.width/10))
+                    HStack{
+                        Spacer()
+                        HStack (alignment: .bottom, spacing: 5) {
+                            hourText
+                            periodText
+                                .opacity(0.9)
+                                .multilineTextAlignment(.leading)
+                        }
+                    }
+                }
+                .ignoresSafeArea()
+                .frame(height: geometry.size.height/10)
+                .padding([.trailing, .leading], geometry.size.width/10)
             }
         }
+        .edgesIgnoringSafeArea(.all)
+    }
+    
+    func progressBar() -> some View {
+        return (
+            GeometryReader { geometry in
+                ZStack(alignment: .leading) {
+                    
+                    RoundedRectangle(cornerRadius: 60)
+                        .stroke(Color(UIColor.pinkBed!), lineWidth: 2)
+                    
+                    ZStack(alignment: .trailing) {
+                        RoundedRectangle(cornerRadius: 60)
+                            .fill(Color(UIColor.pinkBed!))
+                        Text("\(String(format: "%.0f", sleepRate))%")
+                            .foregroundColor(.white)
+                            .fontWeight(.semibold)
+                            .font(.system(size: 20))
+                            .frame(width: 55)
+                            .padding([.top, .bottom], 5)
+                            .padding([.leading, .trailing], 10)
+                            .background(
+                                RoundedRectangle(cornerRadius: 60)
+                                    .fill(Color(UIColor.pinkPink!))
+                            )
+                            .shadow(color: .black, radius: 2)
+                        
+                    }
+                    .frame(width: (CGFloat(sleepRate + 10) * geometry.size.width)/100, height: 25)
+                }
+            }
+                .fixedSize(horizontal: false, vertical: true)
+        )
     }
 }
 
 extension GameView: TimerDelegate {
-    func addOneHour() {
-        hour = hour + 1
+    func decreaseSleepRate() {
+        if sleepRate > 0.02 {
+            sleepRate = sleepRate - 0.02
+        } else {
+            gameDelegate?.gameOver(timeDuration: "\(hour) \(timePeriod)")
+        }
+    }
+    
+    func addOneMinute() {
+        minutes = minutes + 1
+        if minutes == 60 {
+            minutes = 0
+            hour = hour + 1
+        }
+        if minutes/10 < 1 {
+            minutesString = "0\(String(format:"%.0f", minutes))"
+        } else {
+            minutesString = (String(format:"%.0f", minutes))
+        }
         if hour == 13 {
             hour = 1
             timePeriod = "AM"
