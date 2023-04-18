@@ -66,6 +66,7 @@ class GameScene: SKScene {
     override func didMove(to view: SKView) {
         backgroundColor = .clear
         setScene()
+        AudioManager.shared.playSound(sound: .game)
     }
     
     override func update(_ currentTime: TimeInterval) {
@@ -104,16 +105,19 @@ class GameScene: SKScene {
                 if curtain.animated == false {
                     curtain.applyWind()
                     room.changeShadows()
+                    AudioManager.shared.playSound(sound: .wind)
                 }
             } else if randomObject is Computer {
                 if computer.animated == false {
                     addChild(computer)
                     computer.turnOn()
+                    AudioManager.shared.playSound(sound: .computerMusic)
                 }
             } else {
                 if lighting.animated == false {
                     addChild(lighting)
                     lighting.turnOn()
+                    AudioManager.shared.playSound(sound: .light)
                 }
             }
         }
@@ -136,18 +140,21 @@ class GameScene: SKScene {
             if curtain.animated {
                 curtain.stopWind()
                 room.stopShadows()
+                AudioManager.shared.turnSoundOff(sound: .wind)
             }
         }
         
         if lightingHitArea.contains(touchLocation) {
             if lighting.animated {
                 lighting.turnOff()
+                AudioManager.shared.turnSoundOff(sound: .light)
             }
         }
         
         if computerHitArea.contains(touchLocation) {
             if computer.animated {
                 computer.turnOff()
+                AudioManager.shared.turnSoundOff(sound: .computerMusic)
             }
         }
     }

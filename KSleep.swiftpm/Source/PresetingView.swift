@@ -6,13 +6,22 @@
 //
 
 import SwiftUI
+import UIKit
+
+extension UIColor {
+    static var blueSky = UIColor(named: "BlueSky")
+    static var blueWall = UIColor(named: "BlueWall")
+    static var purpleWall = UIColor(named: "PurpleWall")
+    static var pinkBed = UIColor(named: "PinkBed")
+    static var pinkPink = UIColor(named: "RandomColor")
+}
 
 struct PresentingView: View {
     
     @State var showWinView = false
     @State var showGameOverView = false
     @State var showGameView = true
-    @State var showTitleView = false
+    @State var showHomeView = false
     
     @State var appeared: Double = 0
     
@@ -43,13 +52,15 @@ extension PresentingView: GameProtocol {
         withAnimation{
             showGameView = false
             showWinView = true
+            AudioManager.shared.playSound(sound: .victory)
         }
     }
     
     func gameOver(timeDuration: String) {
         withAnimation{
             showGameView = false
-            showGameOverView = true            
+            showGameOverView = true
+            AudioManager.shared.playSound(sound: .gameOver)
         }
     }
 }
