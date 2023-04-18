@@ -1,6 +1,11 @@
 import SwiftUI
 import SpriteKit
 
+protocol GameProtocol {
+    func win()
+    func gameOver(timeDuration: String)
+}
+
 struct GameView: View {
 
     @State var hour: Int = 10
@@ -8,6 +13,7 @@ struct GameView: View {
     @State var minutesString: String = "00"
     @State var timePeriod = "PM"
     @State var sleepRate: CGFloat = 100
+    @State var adictionalDistance: CGFloat = 0
     var gameDelegate: GameProtocol?
     
     var gameScene: SKScene {
@@ -97,7 +103,7 @@ struct GameView: View {
                             .shadow(color: .black, radius: 2)
                         
                     }
-                    .frame(width: (CGFloat(sleepRate + 10) * geometry.size.width)/100, height: 25)
+                    .frame(width: (CGFloat(sleepRate + adictionalDistance) * geometry.size.width)/100, height: 25)
                 }
             }
                 .fixedSize(horizontal: false, vertical: true)
@@ -107,9 +113,13 @@ struct GameView: View {
 
 extension GameView: TimerDelegate {
     func decreaseSleepRate() {
-        if sleepRate > 0.02 {
-            sleepRate = sleepRate - 0.02
+        if sleepRate > 0.03 {
+            sleepRate = sleepRate - 0.03
+            if sleepRate < 90 && sleepRate > 89 {
+                adictionalDistance = adictionalDistance + 0.03
+            }
         } else {
+            AudioManager.shared.turnAllSoundsOff()
             gameDelegate?.gameOver(timeDuration: "\(hour) \(timePeriod)")
         }
     }
@@ -130,6 +140,7 @@ extension GameView: TimerDelegate {
             timePeriod = "AM"
         }
         if hour == 6 {
+            AudioManager.shared.turnAllSoundsOff()
             gameDelegate?.win()
         }
     }
