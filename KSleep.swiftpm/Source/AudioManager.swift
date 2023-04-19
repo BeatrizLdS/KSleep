@@ -56,9 +56,7 @@ class AudioManager {
         if let urlString = Bundle.main.path(forResource: sound.rawValue, ofType: "mp3") {
             guard let url = URL(string: urlString) else { return }
             if let player = players[url] {
-                if player.isPlaying {
-                    player.stop()
-                }
+                player.stop()
             }
         }
     }
@@ -66,9 +64,7 @@ class AudioManager {
     func turnAllSoundsOff() {
         for player in players {
             let audioPlayer = player.value
-            if audioPlayer.isPlaying {
-                audioPlayer.stop()
-            }
+            audioPlayer.stop()
         }
     }
     

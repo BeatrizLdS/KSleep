@@ -10,7 +10,7 @@ import SpriteKit
 
 class GameScene: SKScene {
     
-    private var minutesInGame = 0.15
+    private var minutesInGame = 0.0625
     var lastUpdateTime: TimeInterval = 0
     var numberOfMinutes: Int = 0
     var animationRate = 0.01
@@ -66,7 +66,6 @@ class GameScene: SKScene {
     override func didMove(to view: SKView) {
         backgroundColor = .clear
         setScene()
-        AudioManager.shared.playSound(sound: .game)
     }
     
     override func update(_ currentTime: TimeInterval) {
