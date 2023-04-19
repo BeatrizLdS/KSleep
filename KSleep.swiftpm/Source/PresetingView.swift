@@ -33,63 +33,9 @@ struct PresentingView: View {
         let gameOverView = GameOverView()
         ZStack {
             if showHomeView {
-                VStack(alignment: .center, spacing: 50){
-                    Button(action: {
-                        activateStoryView()
-                    }){
-                        Text("Go Sleep!")
-                            .font(.system(size: 40, weight: .bold))
-                            .foregroundColor(.white)
-                            .padding([.top, .bottom], 25)
-                            .padding([.leading, .trailing], 45)
-                            
-                    }
-                    .background(Color.black)
-                    .cornerRadius(10)
-                    .shadow(color: .black ,radius: 8)
-                    
-                    Button(action: {
-                        
-                    }){
-                        Text("How to play")
-                            .font(.system(size: 30, weight: .semibold))
-                            .foregroundColor(.white)
-                            .padding([.top, .bottom], 15)
-                            .padding([.leading, .trailing], 30)
-                            
-                    }
-                    .background(Color.black)
-                    .cornerRadius(10)
-                    .shadow(color: .black ,radius: 8)
-                    
-                }
-                .transition(.scale)
-            }
-            else if showStoryView {
-                VStack(alignment: .center, spacing: 50) {
-                    Text("Aqui é a área para ter o texto descrevendo a históra")
-                        .font(.system(size: 25, weight: .medium))
-                        .padding(20)
-                        .frame(width: UIScreen.main.bounds.width/1.5, height: UIScreen.main.bounds.height/1.5)
-                        .background(Color.white.opacity(0.8))
-//                        .border(.black, width: 10)
-                        .cornerRadius(10)
-                    
-                    Button(action: {
-                        activateGameView()
-                    }){
-                        Text("Start")
-                            .font(.system(size: 40, weight: .bold))
-                            .foregroundColor(.white)
-                            .padding([.top, .bottom], 25)
-                            .padding([.leading, .trailing], 45)
-                            
-                    }
-                    .background(Color.black)
-                    .cornerRadius(10)
-                    .shadow(color: .black ,radius: 8)
-                }
-                .transition(.scale)
+                homeView
+                storyView
+                howToGameView
             }
             else if showGameView {
                 gameView
@@ -103,9 +49,6 @@ struct PresentingView: View {
                 gameOverView
                     .transition(.opacity)
             }
-            else if showHowToGameView {
-                //MARK: Aqui vai mostrar a tela de tutoras
-            }
         }
         .background(
             Image("Background")
@@ -115,15 +58,83 @@ struct PresentingView: View {
         )
     }
     
+    var homeView: some View {
+        VStack(alignment: .center, spacing: 50){
+            Button(action: {
+                activateStoryView()
+            }){
+                Text("Go Sleep!")
+                    .font(.system(size: 40, weight: .bold))
+                    .foregroundColor(.white)
+                    .padding([.top, .bottom], 25)
+                    .padding([.leading, .trailing], 45)
+                
+            }
+            .background(Color.black)
+            .cornerRadius(10)
+            .shadow(color: .black ,radius: 8)
+            
+            Button(action: {
+                activateHowToPlayView()
+            }){
+                Text("How to play")
+                    .font(.system(size: 30, weight: .semibold))
+                    .foregroundColor(.white)
+                    .padding([.top, .bottom], 15)
+                    .padding([.leading, .trailing], 30)
+                
+            }
+            .background(Color.black)
+            .cornerRadius(10)
+            .shadow(color: .black ,radius: 8)
+            
+        }
+        .transition(.scale)
+    }
+    
+    var storyView: some View {
+        ModalView(isShowing: $showStoryView, titleString: "") {
+            VStack(alignment: .center) {
+                Text("Aqui é a área para adicionar o texto")
+                Spacer()
+                startButton
+            }
+        }
+    }
+    
+    var howToGameView: some View {
+        ModalView(isShowing: $showHowToGameView, titleString: "How to Play") {
+            VStack(alignment: .center) {
+                Text("Aqui é a área para adicionar o texto")
+            }
+        }
+    }
+    
+    var startButton: some View {
+        Button(action: {
+            activateGameView()
+        }){
+            Text("Start")
+                .font(.system(size: 40, weight: .bold))
+                .foregroundColor(.white)
+                .padding([.top, .bottom], 25)
+                .padding([.leading, .trailing], 45)
+            
+        }
+        .background(Color.black)
+        .cornerRadius(10)
+        .shadow(color: .black ,radius: 8)
+    }
+    
     private func activateStoryView() {
         withAnimation {
-            showHomeView.toggle()
             showStoryView.toggle()
         }
     }
     
     private func activateGameView() {
         withAnimation {
+            showHomeView.toggle()
             showStoryView.toggle()
             showGameView.toggle()
         }
