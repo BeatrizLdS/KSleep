@@ -13,8 +13,9 @@ class GameScene: SKScene {
     private var minutesInGame = 0.0625
     var lastUpdateTime: TimeInterval = 0
     var numberOfMinutes: Int = 0
-    var animationRate = 0.01
+    var animationRate = 0.005
     var timerDelegate: TimerDelegate?
+    var startGame: Bool = false
     
     let room: Room = {
         let room = Room()
@@ -69,30 +70,37 @@ class GameScene: SKScene {
     }
     
     override func update(_ currentTime: TimeInterval) {
-        let randomNumber = Double.random(in: 0...1)
-        if randomNumber < animationRate {
-            activateRandomAnimation()
-        }
         
         let timeInSeconds = calculateDeltaTime(from: currentTime)
-        if timeInSeconds >= minutesInGame {
-            lastUpdateTime = 0
-            timerDelegate?.addOneMinute()
-            numberOfMinutes += 1
-        }
-        if numberOfMinutes == 60 {
-            animationRate = animationRate + 0.002
-            numberOfMinutes = 0
+        if timeInSeconds >= 1 {
+            startGame = true
         }
         
-        if curtain.animated {
-            timerDelegate?.decreaseSleepRate()
-        }
-        if lighting.animated {
-            timerDelegate?.decreaseSleepRate()
-        }
-        if computer.animated {
-            timerDelegate?.decreaseSleepRate()
+        if startGame {
+            if timeInSeconds >= minutesInGame {
+                lastUpdateTime = 0
+                timerDelegate?.addOneMinute()
+                numberOfMinutes += 1
+            }
+            if numberOfMinutes == 60 {
+                animationRate = animationRate + 0.001
+                numberOfMinutes = 0
+            }
+            
+            let randomNumber = Double.random(in: 0...1)
+            if randomNumber < animationRate {
+                activateRandomAnimation()
+            }
+            
+            if curtain.animated {
+                timerDelegate?.decreaseSleepRate()
+            }
+            if lighting.animated {
+                timerDelegate?.decreaseSleepRate()
+            }
+            if computer.animated {
+                timerDelegate?.decreaseSleepRate()
+            }
         }
     }
     
