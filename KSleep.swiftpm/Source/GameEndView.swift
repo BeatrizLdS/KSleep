@@ -48,6 +48,7 @@ struct GameEndView: View {
     var titleView: some View {
         Text(TitleString)
             .font(.system(size: 40, weight: .bold, design: .rounded))
+            .foregroundColor(.black)
             .padding(.horizontal, 50)
             .padding(.vertical, 30)
             .background(Color.white)
@@ -60,6 +61,7 @@ struct GameEndView: View {
             Text(state.rawValue)
                 .font(.system(size: 22, weight: .medium, design: .default))
                 .padding(.horizontal, 30)
+                .foregroundColor(.black)
             HStack(alignment: .center, spacing: 1) {
                 hourText
                 periodText
@@ -77,12 +79,14 @@ struct GameEndView: View {
     var hourText: Text {
         var text = Text(hourString)
         text = text.font(.system(size: 25, weight: .semibold))
+        text = text.foregroundColor(.black)
         return text
     }
     
     var periodText: Text {
         var text = Text(periodString)
         text = text.font(.system(size: 20, weight: .medium))
+        text = text.foregroundColor(.black)
         return text
     }
     

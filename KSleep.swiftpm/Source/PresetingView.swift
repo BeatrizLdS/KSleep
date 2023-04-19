@@ -103,7 +103,7 @@ struct PresentingView: View {
         "To help her improve her mood during the day and get a good night's sleep, she needs a little help from you.",
         "Your goal is to prevent Alice's sleep level from reaching 0% between the hours of 10 pm and 6 am, so that she doesn't wake up before completing her 8 hours of sleep."]
         return (
-            ModalView(isShowing: $showStoryView, titleString: "") {
+            ModalView(isShowing: $showStoryView) {
                 VStack(alignment: .leading, spacing: 20) {
                     ForEach(texts, id: \.self) {
                         Text("\($0)")
@@ -111,12 +111,14 @@ struct PresentingView: View {
                             .font(.system(size: 26,
                                           weight: .regular,
                                           design: .rounded))
+                            .foregroundColor(.black)
                     }
                     Text("To do this, you must **tap the light** to turn it off whenever it comes on, **tap the window** to stop the high winds, and **tap the computer** to turn it off when it starts playing music.")
                         .padding([.leading, .trailing], 30)
                         .font(.system(size: 26,
                                       weight: .regular,
                                       design: .rounded))
+                        .foregroundColor(.black)
                     
                 }
             } action: {
