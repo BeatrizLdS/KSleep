@@ -113,18 +113,21 @@ class GameScene: SKScene {
                     curtain.applyWind()
                     room.changeShadows()
                     AudioManager.shared.playSound(sound: .wind)
+                    UserDefaults.standard.set(true, forKey: "curtain")
                 }
             } else if randomObject is Computer {
                 if computer.animated == false {
                     addChild(computer)
                     computer.turnOn()
                     AudioManager.shared.playSound(sound: .computerMusic)
+                    UserDefaults.standard.set(true, forKey: "computer")
                 }
             } else {
                 if lighting.animated == false {
                     addChild(lighting)
                     lighting.turnOn()
                     AudioManager.shared.playSound(sound: .light)
+                    UserDefaults.standard.set(true, forKey: "lighting")
                 }
             }
         }
@@ -148,6 +151,7 @@ class GameScene: SKScene {
                 curtain.stopWind()
                 room.stopShadows()
                 AudioManager.shared.turnSoundOff(sound: .wind)
+                UserDefaults.standard.set(false, forKey: "curtain")
             }
         }
         
@@ -155,6 +159,7 @@ class GameScene: SKScene {
             if lighting.animated {
                 lighting.turnOff()
                 AudioManager.shared.turnSoundOff(sound: .light)
+                UserDefaults.standard.set(false, forKey: "lighting")
             }
         }
         
@@ -162,6 +167,7 @@ class GameScene: SKScene {
             if computer.animated {
                 computer.turnOff()
                 AudioManager.shared.turnSoundOff(sound: .computerMusic)
+                UserDefaults.standard.set(false, forKey: "computer")
             }
         }
     }
@@ -169,6 +175,27 @@ class GameScene: SKScene {
 
 
 extension GameScene: SetSceneProtocol {
+    func updateScene() {
+        let curtainAnimated = UserDefaults.standard.bool(forKey: "curtain")
+        let lightingAnimated = UserDefaults.standard.bool(forKey: "lighting")
+        let computerAnimated = UserDefaults.standard.bool(forKey: "computer")
+        if curtainAnimated {
+            curtain.applyWind()
+            room.changeShadows()
+            AudioManager.shared.playSound(sound: .wind)
+        }
+        if computerAnimated {
+            addChild(computer)
+            computer.turnOn()
+            AudioManager.shared.playSound(sound: .computerMusic)
+        }
+        if lightingAnimated {
+            addChild(lighting)
+            lighting.turnOn()
+            AudioManager.shared.playSound(sound: .light)
+        }
+    }
+    
     func setPosition() {
         let objects = [room, curtain, lighting, computer]
         
