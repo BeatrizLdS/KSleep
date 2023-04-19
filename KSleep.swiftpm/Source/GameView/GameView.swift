@@ -76,6 +76,7 @@ struct GameView: View {
             }
         }
         .edgesIgnoringSafeArea(.all)
+        .background(Color.black)
     }
     
     func progressBar() -> some View {

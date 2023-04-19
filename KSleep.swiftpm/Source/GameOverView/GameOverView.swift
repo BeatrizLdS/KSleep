@@ -10,7 +10,6 @@ import SwiftUI
 struct GameOverView: View {
     var body: some View {
         ZStack {
-            Color.black
             Text("Game Over!!")
                 .font(.title)
                 .foregroundColor(.white)
