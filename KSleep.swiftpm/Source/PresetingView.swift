@@ -18,6 +18,9 @@ extension UIColor {
 }
 
 struct PresentingView: View {
+    
+    @State private var orientation = UIDevice.current.orientation
+    
     @State var showWinView = false
     @State var showGameOverView = false
     @State var showGameView = false
@@ -56,7 +59,20 @@ struct PresentingView: View {
             }
         }
         .background(
-            Image("Background")
+            imageBackground
+        )
+        .detectOrientation($orientation)
+    }
+    
+    var imageBackground: some View {
+        var imageName = ""
+        if orientation.isLandscape {
+            imageName = "Background-h"
+        } else {
+            imageName = "Background-v"
+        }
+        return(
+            Image(imageName)
                 .resizable()
                 .ignoresSafeArea(.all)
                 .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
