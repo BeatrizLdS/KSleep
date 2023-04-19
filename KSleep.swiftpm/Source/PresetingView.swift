@@ -27,10 +27,11 @@ struct PresentingView: View {
     
     @State var appeared: Double = 0
     
+    @State var hour: String = "6:00"
+    @State var timePeriod: String = "AM"
+    
     var body: some View {
         let gameView = GameView(gameDelegate: self)
-        let winView = WinView()
-        let gameOverView = GameOverView()
         ZStack {
             if showHomeView {
                 homeView
@@ -42,12 +43,18 @@ struct PresentingView: View {
                     .transition(.opacity)
             }
             else if showWinView {
-                winView
-                    .transition(.opacity)
+                GameEndView(TitleString: "Congratulations!",
+                            hourString: hour,
+                            periodString: timePeriod,
+                            state: .win,
+                            restartGame: {restartView()})
             }
             else if showGameOverView {
-                gameOverView
-                    .transition(.opacity)
+                GameEndView(TitleString: "Game Over!",
+                            hourString: hour,
+                            periodString: timePeriod,
+                            state: .lose,
+                            restartGame: {restartView()})
             }
         }
         .background(
@@ -64,7 +71,7 @@ struct PresentingView: View {
                 activateStoryView()
             }){
                 Text("Go Sleep!")
-                    .font(.system(size: 40, weight: .bold))
+                    .font(.system(size: 40, weight: .bold, design: .rounded))
                     .foregroundColor(.white)
                     .padding([.top, .bottom], 25)
                     .padding([.leading, .trailing], 45)
@@ -78,7 +85,7 @@ struct PresentingView: View {
                 activateHowToPlayView()
             }){
                 Text("How to play")
-                    .font(.system(size: 30, weight: .semibold))
+                    .font(.system(size: 30, weight: .semibold, design: .rounded))
                     .foregroundColor(.white)
                     .padding([.top, .bottom], 15)
                     .padding([.leading, .trailing], 30)
@@ -146,22 +153,30 @@ struct PresentingView: View {
         }
     }
     
+    private func restartView() {
+        withAnimation {
+            showWinView = false
+            showGameOverView = false
+            showHomeView.toggle()
+        }
+    }
+    
 }
 
 extension PresentingView: GameProtocol {
+    func gameOver(hour: String, timeperiod: String) {
+        self.hour = hour
+        self.timePeriod = timeperiod
+        withAnimation {
+            showGameView = false
+            showGameOverView = true
+        }
+    }
+    
     func win() {
         withAnimation {
             showGameView = false
             showWinView = true
-            AudioManager.shared.playSound(sound: .victory)
-        }
-    }
-    
-    func gameOver(timeDuration: String) {
-        withAnimation {
-            showGameView = false
-            showGameOverView = true
-            AudioManager.shared.playSound(sound: .gameOver)
         }
     }
 }

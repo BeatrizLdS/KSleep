@@ -49,7 +49,7 @@ struct ModalView<Content: View>: View {
     
     var title: some View {
         Text(titleString)
-            .font(.system(size: 30, weight: .bold, design: .rounded))
+            .font(.system(size: 40, weight: .bold, design: .rounded))
     }
     
     var close: some View {

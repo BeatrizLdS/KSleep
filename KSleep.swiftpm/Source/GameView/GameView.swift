@@ -3,7 +3,7 @@ import SpriteKit
 
 protocol GameProtocol {
     func win()
-    func gameOver(timeDuration: String)
+    func gameOver(hour: String, timeperiod: String)
 }
 
 struct GameView: View {
@@ -77,6 +77,15 @@ struct GameView: View {
         }
         .edgesIgnoringSafeArea(.all)
         .background(Color.black)
+        .onAppear{
+            AudioManager.shared.playSound(sound: .game)
+        }
+        .onDisappear{
+            AudioManager.shared.turnSoundOff(sound: .game)
+            AudioManager.shared.turnSoundOff(sound: .computerMusic)
+            AudioManager.shared.turnSoundOff(sound: .light)
+            AudioManager.shared.turnSoundOff(sound: .wind)
+        }
     }
     
     func progressBar() -> some View {
@@ -114,14 +123,13 @@ struct GameView: View {
 
 extension GameView: TimerDelegate {
     func decreaseSleepRate() {
-        if sleepRate > 0.03 {
-            sleepRate = sleepRate - 0.03
+        if sleepRate > 0.05 {
+            sleepRate = sleepRate - 0.05
             if sleepRate < 90 && sleepRate > 89 {
                 adictionalDistance = adictionalDistance + 0.03
             }
         } else {
-            AudioManager.shared.turnAllSoundsOff()
-            gameDelegate?.gameOver(timeDuration: "\(hour) \(timePeriod)")
+            gameDelegate?.gameOver(hour: "\(hour):\(minutesString)", timeperiod: timePeriod)
         }
     }
     
@@ -141,7 +149,6 @@ extension GameView: TimerDelegate {
             timePeriod = "AM"
         }
         if hour == 6 {
-            AudioManager.shared.turnAllSoundsOff()
             gameDelegate?.win()
         }
     }
