@@ -98,4 +98,15 @@ iOSInjectionProject/
 /*.gcno
 **/xcshareddata/WorkspaceSettings.xcsettings
 
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
 # End of https://www.toptal.com/developers/gitignore/api/xcode,swift
