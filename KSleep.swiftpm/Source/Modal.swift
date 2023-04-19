@@ -10,7 +10,6 @@ import SwiftUI
 struct ModalView<Content: View>: View {
     
     @Binding var isShowing: Bool
-    var titleString: String
     var contentView: () -> Content
     var action: () -> Void
     
@@ -41,11 +40,6 @@ struct ModalView<Content: View>: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
         .ignoresSafeArea()
-    }
-    
-    var title: some View {
-        Text(titleString)
-            .font(.system(size: 40, weight: .bold, design: .rounded))
     }
     
     var close: some View {
