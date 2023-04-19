@@ -162,6 +162,9 @@ extension PresentingView: GameProtocol {
             showGameView = false
             showGameOverView = true
         }
+        UserDefaults.standard.set(false, forKey: "computer")
+        UserDefaults.standard.set(false, forKey: "lighting")
+        UserDefaults.standard.set(false, forKey: "curtain")
     }
     
     func win() {
@@ -169,5 +172,8 @@ extension PresentingView: GameProtocol {
             showGameView = false
             showWinView = true
         }
+        UserDefaults.standard.set(false, forKey: "computer")
+        UserDefaults.standard.set(false, forKey: "lighting")
+        UserDefaults.standard.set(false, forKey: "curtain")
     }
 }
